@@ -37,6 +37,15 @@ class DemoProperties extends FlatSpec with Matchers with PropertyChecks {
     }
   }
 
+  "nextDay : java and joda" should "be the same" in {
+    forAll(genDate) { d: Date =>
+      val s = Dates.toString(d)
+      println(s)
+
+      Dates.nextDay(s) shouldBe Dates.nextDayJoda(s)
+    }
+  }
+
   val genDate: Gen[Date] =
     for {
       y <- Gen.chooseNum(-200, 100)
