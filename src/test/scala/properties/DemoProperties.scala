@@ -9,13 +9,10 @@ import org.scalatest.prop.PropertyChecks
 import java.text.SimpleDateFormat
 import java.util.Date
 import org.scalacheck.Gen
+import org.scalacheck.Shapeless._
 
 @RunWith(classOf[JUnitRunner])
 class DemoProperties extends FlatSpec with Matchers with PropertyChecks {
-
-  val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS")
-  def toString(d: Date) = dateFormat.format(d)
-  def fromString(s: String) = dateFormat.parse(s)
 
   "reverse" should "be symmetric" in {
     forAll { l: List[Int] =>
@@ -24,17 +21,26 @@ class DemoProperties extends FlatSpec with Matchers with PropertyChecks {
     }
   }
 
-  "format and parse" should "be opposite" in {
-    forAll(genDate) { d: Date =>
-      val s = toString(d)
+  "json : format and parse" should "be opposite" in {
+    forAll { p: Person =>
+      val s = JsonSerialization.toString(p)
       println(s)
-      fromString(s) shouldBe d
+      JsonSerialization.fromString(s) shouldBe p
+    }
+  }
+
+  "dateformat : format and parse" should "be opposite" in {
+    forAll(genDate) { d: Date =>
+      val s = Dates.toString(d)
+      println(s)
+      Dates.fromString(s) shouldBe d
     }
   }
 
   val genDate: Gen[Date] =
     for {
-      y <- Gen.chooseNum(-2000, 2000)
+      y <- Gen.chooseNum(-200, 100)
+      //      y <- Gen.chooseNum(-2000, 2000)
       m <- Gen.chooseNum(0, 11)
       d <- Gen.chooseNum(0, 30)
     } yield new Date(y, m, d)
