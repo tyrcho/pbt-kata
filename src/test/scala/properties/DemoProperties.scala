@@ -21,6 +21,13 @@ class DemoProperties extends FlatSpec with Matchers with PropertyChecks {
     }
   }
 
+  "sort" should "be idempotent" in {
+    forAll { l: List[Int] =>
+      println(l)
+      l.sorted.sorted shouldBe l.sorted
+    }
+  }
+
   "json : format and parse" should "be opposite" in {
     forAll { p: Person =>
       val s = JsonSerialization.toString(p)
@@ -48,6 +55,14 @@ class DemoProperties extends FlatSpec with Matchers with PropertyChecks {
 
   "db : insert and get" should "be symmetric" in {
     forAll { p: Person =>
+      DummyDao.insert(p.name, p)
+      DummyDao.get(p.name) shouldBe Some(p)
+    }
+  }
+
+  "db : insert" should "be idempotent" in {
+    forAll { p: Person =>
+      DummyDao.insert(p.name, p)
       DummyDao.insert(p.name, p)
       DummyDao.get(p.name) shouldBe Some(p)
     }
