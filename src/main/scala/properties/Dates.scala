@@ -23,6 +23,6 @@ object Dates {
 
   def nextDayJoda(s: String) = {
     val d = formatJoda.parseDateTime(s)
-    formatJoda.print(d.plus(1))
+    formatJoda.print(d + 1.day)
   }
 }

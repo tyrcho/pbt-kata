@@ -46,6 +46,13 @@ class DemoProperties extends FlatSpec with Matchers with PropertyChecks {
     }
   }
 
+  "db : insert and get" should "be symmetric" in {
+    forAll { p: Person =>
+      DummyDao.insert(p.name, p)
+      DummyDao.get(p.name) shouldBe Some(p)
+    }
+  }
+
   val genDate: Gen[Date] =
     for {
       y <- Gen.chooseNum(-200, 100)
