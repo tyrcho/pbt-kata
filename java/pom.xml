@@ -21,6 +21,12 @@
 
 		<!-- tests -->
 		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.6.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.pholser</groupId>
 			<artifactId>junit-quickcheck-core</artifactId>
 			<version>0.7</version>
