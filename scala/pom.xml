@@ -6,7 +6,7 @@
 
 	<groupId>info.daviot</groupId>
 	<version>0.1-SNAPSHOT</version>
-	<artifactId>pbt-kata</artifactId>
+	<artifactId>pbt-kata-scala</artifactId>
 
 	<packaging>jar</packaging>
 
