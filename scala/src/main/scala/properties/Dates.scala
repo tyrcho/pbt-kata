@@ -5,7 +5,7 @@ import java.util.Date
 import java.util.Calendar
 
 object Dates {
-  val pattern = "yyyy-MM-dd HH:mm:SS"
+  val pattern = "yyyy-MM-dd HH:mm:ss.SSS"
   val dateFormat = new SimpleDateFormat(pattern)
   def toString(d: Date) = dateFormat.format(d)
   def fromString(s: String) = dateFormat.parse(s)
