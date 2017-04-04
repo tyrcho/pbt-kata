@@ -38,14 +38,6 @@ public class DemoProperties {
 		assertThat(list).containsExactlyElementsOf(sorted);
 	}
 
-	@Property
-	public void jsonSerialize(@From(PersonGenerator.class) Person p) throws IOException {
-		String s = JsonSerializer.toString(p);
-		System.out.println(s);
-		Person p2 = JsonSerializer.fromString(s);
-		assertThat(p2).isEqualTo(p);
-	}
-
 	// some issues with date ~1900
 	@Property
 	public void dateFormatParse(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
@@ -53,6 +45,20 @@ public class DemoProperties {
 		System.out.println(s);
 		Date d2 = Dates.fromString(s);
 		assertThat(d).isEqualTo(d2);
+	}
+
+	@Property
+	public void dateNextDay(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
+		String s = Dates.toString(d);
+		assertThat(Dates.nextDayJava8(s)).isEqualTo(Dates.nextDay(s));
+	}
+
+	@Property
+	public void jsonSerialize(@From(PersonGenerator.class) Person p) throws IOException {
+		String s = JsonSerializer.toString(p);
+		System.out.println(s);
+		Person p2 = JsonSerializer.fromString(s);
+		assertThat(p2).isEqualTo(p);
 	}
 
 }
