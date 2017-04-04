@@ -61,4 +61,19 @@ public class DemoProperties {
 		assertThat(p2).isEqualTo(p);
 	}
 
+	@Property
+	public void dbInsertGet(@From(PersonGenerator.class) Person p) throws IOException {
+		DummyDao dao = new DummyDao();
+		dao.insert(p);
+		assertThat(dao.get(p.name)).isEqualTo(p);
+	}
+
+	@Property
+	public void dbInsertIdempotent(@From(PersonGenerator.class) Person p) throws IOException {
+		DummyDao dao = new DummyDao();
+		dao.insert(p);
+		dao.insert(p);
+		assertThat(dao.get(p.name)).isEqualTo(p);
+	}
+
 }
