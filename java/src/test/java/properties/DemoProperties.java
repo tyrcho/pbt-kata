@@ -17,10 +17,29 @@ import static org.assertj.core.api.Assertions.*;
 @RunWith(JUnitQuickcheck.class)
 public class DemoProperties {
 
-	// example
+	// examples
 	@Property
 	public void concatenationLength(String s1, String s2) {
 		assertThat(s1.length() + s2.length()).isEqualTo((s1 + s2).length());
+	}
+
+	public int add(int i, int j) {
+		return i * j;
+	}
+
+	@Property
+	public void additionAssoc(@InRange(min = "-10", max = "10") int i, int j, int k) {
+		assertThat(add(add(i, j), k)).isEqualTo(add(i, add(j, k)));
+	}
+
+	@Property
+	public void additionCommu(int i, int j, int k) {
+		assertThat(add(i, j)).isEqualTo(add(j, i));
+	}
+
+	@Property
+	public void additionNeutral(int i) {
+		assertThat(add(i, 0)).isEqualTo(i);
 	}
 
 	// TODO (there and back again) : test that list.reverse.reverse == list
