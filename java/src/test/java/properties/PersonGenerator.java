@@ -12,9 +12,7 @@ public class PersonGenerator extends Generator<Person> {
 
 	public Person generate(SourceOfRandomness random, GenerationStatus status) {
 		Person person = new Person();
-		person.address = new Address();
-		person.address.street = gen().type(String.class).generate(random, status);
-		person.address.zipcode = gen().type(Integer.class).generate(random, status);
+		//TODO : finish the implementation
 		person.name = gen().type(String.class).generate(random, status);
 		return person;
 	}
