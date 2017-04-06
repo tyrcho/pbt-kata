@@ -1,18 +1,82 @@
+#                                      ,.   '\'\    ,---.
+#     Quiet, Pinky; I'm pondering.    | \\  l\\l_ //    |   Err ... right,
+#            _              _         |  \\/ `/  `.|    |   Brain!  Narf!
+#          /~\\   \        //~\       | Y |   |   ||  Y |
+#          |  \\   \      //  |       |  \|   |   |\ /  |   /
+#          [   ||        ||   ]       \   |  o|o  | >  /   /
+#         ] Y  ||        ||  Y [       \___\_--_ /_/__/
+#         |  \_|l,------.l|_/  |       /.-\(____) /--.\
+#         |   >'          `<   |       `--(______)----'
+#         \  (/~`--____--'~\)  /           U// U / \
+#          `-_>-__________-<_-'            / \  / /|
+#              /(_#(__)#_)\               ( .) / / ]
+#              \___/__\___/                `.`' /   [
+#               /__`--'__\                  |`-'    |
+#            /\(__,>-~~ __)                 |       |__
+#         /\//\\(  `--~~ )                 _l       |--:.
+#         '\/  <^\      /^>               |  `   (  <   \\
+#              _\ >-__-< /_             ,-\  ,-~~->. \   `:.___,/
+#             (___\    /___)           (____/    (____)    `---'
+
+
+# Java stuff
+
 *.class
+*.jar
+*.war
+
+# Maven stuff
+
+target/
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Eclipse stuff
+
+.classpath
+.project
+.settings
+
+# IntelliJ Stuff
+
+*.iml
+.idea/
+
+# Logs
+
 *.log
 
-# sbt specific
+# SBT Stuff
+
 .cache
 .history
 .lib/
 dist/*
-target/
 lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
 
-# Scala-IDE specific
+# Scala-IDE Stuff
+
 .scala_dependencies
 .worksheet
 .cache*
+
+# Gradle Stuff
+
+.gradle
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache

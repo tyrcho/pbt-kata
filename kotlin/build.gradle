@@ -1,0 +1,30 @@
+apply plugin: 'idea'
+apply plugin: 'kotlin'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3-4'
+    compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.3-4'
+    compile 'com.pholser:junit-quickcheck-core:0.7'
+    compile 'com.pholser:junit-quickcheck-generators:0.7'
+    testCompile 'org.assertj:assertj-core:3.6.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+}
+
+buildscript {
+    ext.kotlin_version = '1.1.1'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
