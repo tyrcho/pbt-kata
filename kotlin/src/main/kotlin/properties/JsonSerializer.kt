@@ -2,13 +2,16 @@ package properties
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
-data class Address(val street: String, val town: String, val zip: Int)
+data class Address(var street: String, var town: String, var zip: Int) {
+    constructor(): this("","",0)
+}
+
 data class Person(var name: String, var address: Address) {
-   constructor() :this("",Address("","",0))
+    constructor(): this("",Address())
 }
 
 object JsonSerializer {
-    fun toString(p: Person) = ObjectMapper().writeValueAsString(p)
+    fun toString(p: Person): String = ObjectMapper().writeValueAsString(p)
 
-    fun fromString(s: String) = ObjectMapper().readValue(s, Person::class.java)
+    fun fromString(s: String): Person = ObjectMapper().readValue(s, Person::class.java)
 }

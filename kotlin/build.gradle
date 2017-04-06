@@ -17,6 +17,7 @@ dependencies {
     compile 'com.pholser:junit-quickcheck-generators:0.7'
     testCompile 'org.assertj:assertj-core:3.6.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testCompile 'io.kotlintest:kotlintest:2.0.0'
 }
 
 buildscript {

@@ -11,8 +11,8 @@ object Dates {
     internal val pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS"
     internal val dateFormat: DateFormat = SimpleDateFormat(pattern)
 
-    fun toString(d: Date) = dateFormat.format(d)
-    fun fromString(s: String) = dateFormat.parse(s)
+    fun toString(d: Date) = dateFormat.format(d)!!
+    fun fromString(s: String) = dateFormat.parse(s)!!
 
     fun nextDay(s: String): String {
         val c = Calendar.getInstance()

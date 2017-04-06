@@ -8,8 +8,11 @@ class PersonGenerator : Generator<Person>(Person::class.java) {
 
     override fun generate(random: SourceOfRandomness, status: GenerationStatus): Person {
         val person = Person()
-        //TODO : finish the implementation
-        person.name = gen().type(String::class.java).generate(random, status)
+
+        fun randomString() = gen().type(String::class.java).generate(random,status)
+
+        person.name = randomString()
+        person.address = Address(randomString(), randomString(), random.nextInt())
         return person
     }
 
