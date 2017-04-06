@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static properties.MyCollections.*;
+import static properties.Addition.*;
 
 @RunWith(JUnitQuickcheck.class)
 public class DemoProperties {
@@ -22,10 +23,6 @@ public class DemoProperties {
 	@Property
 	public void concatenationLength(String s1, String s2) {
 		assertThat(s1.length() + s2.length()).isEqualTo((s1 + s2).length());
-	}
-
-	public int add(int i, int j) {
-		return i + j;
 	}
 
 	@Property
