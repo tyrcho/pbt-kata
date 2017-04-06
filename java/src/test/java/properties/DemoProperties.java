@@ -17,32 +17,63 @@ import static org.assertj.core.api.Assertions.*;
 @RunWith(JUnitQuickcheck.class)
 public class DemoProperties {
 
-	// example
-	@Property
-	public void concatenationLength(String s1, String s2) {
-		assertThat(s1.length() + s2.length()).isEqualTo((s1 + s2).length());
-	}
+    @Property
+    public void concatenationLength(String s1, String s2) {
+        assertThat(s1.length() + s2.length()).isEqualTo((s1 + s2).length());
+    }
 
-	// TODO (there and back again) : test that list.reverse.reverse == list
+    @Property
+    public void reverseList(List<Integer> list) {
+        List<Integer> original = new ArrayList<Integer>(list);
+        Collections.reverse(list);
+        Collections.reverse(list);
+        assertThat(list).containsExactlyElementsOf(original);
+    }
 
-	// TODO (idempotence) : test that list.sort.sort == list.sort
+    @Property
+    public void sortIdempotent(List<Integer> list) {
+        Collections.sort(list);
+        List<Integer> sorted = new ArrayList<Integer>(list);
+        Collections.sort(list);
+        assertThat(list).containsExactlyElementsOf(sorted);
+    }
 
-	// TODO (symmetry) : for any date d, Dates.toString(d) is the
-	// opposite of Dates.fromString(s)
+    // some issues with date ~1900
+    @Property
+    public void dateFormatParse(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
+        String s = Dates.toString(d);
+        System.out.println(s);
+        Date d2 = Dates.fromString(s);
+        assertThat(d).isEqualTo(d2);
+    }
 
-	// Hint : public void dateFormatParse(@InRange(min = "1000", max = "2100",
-	// format = "YYYY") Date d)
+    @Property
+    public void dateNextDay(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
+        String s = Dates.toString(d);
+        assertThat(Dates.nextDayJava8(s)).isEqualTo(Dates.nextDay(s));
+    }
 
-	// TODO (equivalent implementations) : Dates.nextDayJava8(s) ==
-	// Dates.nextDay(s)
+    @Property
+    public void jsonSerialize(@From(PersonGenerator.class) Person p) throws IOException {
+        String s = JsonSerializer.toString(p);
+        System.out.println(s);
+        Person p2 = JsonSerializer.fromString(s);
+        assertThat(p2).isEqualTo(p);
+    }
 
-	// TODO (symmetry) : JsonSerializer.toString(person) and
-	// JsonSerializer.fromString(s)
-	// Hint : @From(PersonGenerator.class)
+    @Property
+    public void dbInsertGet(@From(PersonGenerator.class) Person p) throws IOException {
+        DummyDao dao = new DummyDao();
+        dao.insert(p);
+        assertThat(dao.get(p.name)).isEqualTo(p);
+    }
 
-	// TODO (symmetry) : DummyDao.insert(person) and dao.get(name)
-
-	// TODO (idempotence) : DummyDao.insert(person) has same effect when called
-	// twice
+    @Property
+    public void dbInsertIdempotent(@From(PersonGenerator.class) Person p) throws IOException {
+        DummyDao dao = new DummyDao();
+        dao.insert(p);
+        dao.insert(p);
+        assertThat(dao.get(p.name)).isEqualTo(p);
+    }
 
 }
