@@ -13,29 +13,48 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import static org.assertj.core.api.Assertions.*;
+import static properties.MyCollections.*;
 
 @RunWith(JUnitQuickcheck.class)
 public class DemoProperties {
 
+	// examples
 	@Property
 	public void concatenationLength(String s1, String s2) {
 		assertThat(s1.length() + s2.length()).isEqualTo((s1 + s2).length());
 	}
 
-	@Property
-	public void reverseList(List<Integer> list) {
-		List<Integer> original = new ArrayList<Integer>(list);
-		Collections.reverse(list);
-		Collections.reverse(list);
-		assertThat(list).containsExactlyElementsOf(original);
+	public int add(int i, int j) {
+		return i + j;
 	}
 
 	@Property
+	public void additionAssoc(@InRange(min = "-10", max = "10") int i, int j, int k) {
+		assertThat(add(add(i, j), k)).isEqualTo(add(i, add(j, k)));
+	}
+
+	@Property
+	public void additionCommu(int i, int j, int k) {
+		assertThat(add(i, j)).isEqualTo(add(j, i));
+	}
+
+	@Property
+	public void additionNeutral(int i) {
+		assertThat(add(i, 0)).isEqualTo(i);
+	}
+
+	// TODO (there and back again) : test that list.reverse.reverse == list
+	@Property
+	public void reverseList(List<Integer> list) {
+		List<Integer> twice = reverse(reverse(list));
+		assertThat(twice).containsExactlyElementsOf(list);
+	}
+
+	// TODO (idempotence) : test that list.sort.sort == list.sort
+	@Property
 	public void sortIdempotent(List<Integer> list) {
-		Collections.sort(list);
-		List<Integer> sorted = new ArrayList<Integer>(list);
-		Collections.sort(list);
-		assertThat(list).containsExactlyElementsOf(sorted);
+		List<Integer> twice = sort(sort(list));
+		assertThat(twice).containsExactlyElementsOf(sort(list));
 	}
 
 	// some issues with date ~1900
