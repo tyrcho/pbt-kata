@@ -18,7 +18,6 @@ import static properties.Addition.*;
 
 @RunWith(JUnitQuickcheck.class)
 public class DemoProperties {
-
 	// examples
 	@Property
 	public void concatenationLength(String s1, String s2) {
@@ -54,42 +53,42 @@ public class DemoProperties {
 		assertThat(twice).containsExactlyElementsOf(sort(list));
 	}
 
-	// some issues with date ~1900
-	@Property
-	public void dateFormatParse(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
-		String s = Dates.toString(d);
-		System.out.println(s);
-		Date d2 = Dates.fromString(s);
-		assertThat(d).isEqualTo(d2);
-	}
+    // some issues with date ~1900
+    @Property
+    public void dateFormatParse(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
+        String s = Dates.toString(d);
+        System.out.println(s);
+        Date d2 = Dates.fromString(s);
+        assertThat(d).isEqualTo(d2);
+    }
 
-	@Property
-	public void dateNextDay(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
-		String s = Dates.toString(d);
-		assertThat(Dates.nextDayJava8(s)).isEqualTo(Dates.nextDay(s));
-	}
+    @Property
+    public void dateNextDay(@InRange(min = "1920", max = "3000", format = "YYYY") Date d) throws ParseException {
+        String s = Dates.toString(d);
+        assertThat(Dates.nextDayJava8(s)).isEqualTo(Dates.nextDay(s));
+    }
 
-	@Property
-	public void jsonSerialize(@From(PersonGenerator.class) Person p) throws IOException {
-		String s = JsonSerializer.toString(p);
-		System.out.println(s);
-		Person p2 = JsonSerializer.fromString(s);
-		assertThat(p2).isEqualTo(p);
-	}
+    @Property
+    public void jsonSerialize(@From(PersonGenerator.class) Person p) throws IOException {
+        String s = JsonSerializer.toString(p);
+        System.out.println(s);
+        Person p2 = JsonSerializer.fromString(s);
+        assertThat(p2).isEqualTo(p);
+    }
 
-	@Property
-	public void dbInsertGet(@From(PersonGenerator.class) Person p) throws IOException {
-		DummyDao dao = new DummyDao();
-		dao.insert(p);
-		assertThat(dao.get(p.name)).isEqualTo(p);
-	}
+    @Property
+    public void dbInsertGet(@From(PersonGenerator.class) Person p) throws IOException {
+        DummyDao dao = new DummyDao();
+        dao.insert(p);
+        assertThat(dao.get(p.name)).isEqualTo(p);
+    }
 
-	@Property
-	public void dbInsertIdempotent(@From(PersonGenerator.class) Person p) throws IOException {
-		DummyDao dao = new DummyDao();
-		dao.insert(p);
-		dao.insert(p);
-		assertThat(dao.get(p.name)).isEqualTo(p);
-	}
+    @Property
+    public void dbInsertIdempotent(@From(PersonGenerator.class) Person p) throws IOException {
+        DummyDao dao = new DummyDao();
+        dao.insert(p);
+        dao.insert(p);
+        assertThat(dao.get(p.name)).isEqualTo(p);
+    }
 
 }
