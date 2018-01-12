@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Property Based Testing - Introduction</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+   .image {
+        padding: 0px;
+        color: white;
+        background-color: black;
+
+        position: relative;
+      }
+      .image img {
+        width: 100%;
+        /*height: 100%;*/
+        float: left;
+      }
+	    .image h1, .image h2 {
+        position: absolute;
+        bottom: 0;
+        left: 20px;
+      }
+	   .image-white {
+        color: black;
+        background-color: white;
+      }
+      .image-last h1 {
+        right: 0;
+        bottom: 100px;
+      }
+  </style>
+</head>
+<body>
+  <textarea id="source">
+
+name: image
+layout: true
+class: center, middle, image
+
+---
+name: image-white
+layout: true
+class: center, middle, image, image-white
+
+---
+name: image-last
+layout: true
+class: center, middle, image, image-last
+
+---
+name: inverse
+layout: true
+class: center, middle, inverse
+
+---
+template: inverse
+
+#Property Based Testing
+
+---
+layout:false
+#Agenda
+
+## A trivial example
+## Real-world cases
+## Toolkit
+## Exercise
+
+---
+#EDFH
+
+![:scale 40%](images/garfield.png)
+
+--
+
+... the legendary burned-out, always lazy and often malicious programmer called ...
+
+The Enterprise Developper from Hell
+
+---
+class: center, middle
+
+# Why bother ? Is it realistic ?
+
+--
+
+<table>
+<tr><td> ![:scale 100%](images/evil.png) <td><b>Evil</tr>
+<tr><td> ![:scale 100%](images/stupid.png) <td><b>Stupid</tr>
+<tr><td> ![:scale 100%](images/lazy.png) <td><b>Lazy</tr>
+</table>
+
+In practice, no difference
+
+---
+#One stupid person in particular
+
+--
+
+<table>
+<tr><td> ![:scale 100%](images/stupid.png) <td><b>Me !</tr>
+</table>
+
+When I look at my old code, I always see something wrong !
+
+---
+
+# A trivial example : testing `add` function
+
+```
+assertEquals(4, add(2, 2));
+```
+
+--
+
+```
+int add(int a, int b) {
+  return 4;
+}
+```
+
+---
+
+# A trivial example : testing `add` function
+
+```
+assertEquals(4, add(2, 2));
+assertEquals(5, add(6, -1));
+```
+
+--
+
+```
+int add(int a, int b) {
+    if (a == 6 && b == -1) return 5;
+    else return 4;
+}
+```
+
+---
+
+#TDD Rules 
+
+You are not allowed to write :
+1. Production code unless it is to make a failing unit test pass.
+2. More of a unit test than is sufficient to fail; and compilation failures are failures.
+3. **More production code than is sufficient to pass the one failing unit test.**
+
+![](images/bob.png)
+
+---
+# Rethinking the approach
+
+![:scale 100%](images/rethinking.png)
+
+---
+
+#Using random numbers ...
+
+```
+@Test
+void testAdd() {
+    Random r = new Random();
+    for (int i = 0; i < 100; i++) {
+        int x = r.nextInt();
+        int y = r.nextInt();
+        int expected = x + y;
+        int actual = add(x, y);
+        assertEquals(expected, actual);
+    }
+}
+```
+
+---
+
+#Using random numbers ...
+
+```
+@Test
+void testAdd() {
+    Random r = new Random();
+    for (int i = 0; i < 100; i++) {
+        int x = r.nextInt();
+        int y = r.nextInt();
+*       int expected = x + y;
+        int actual = add(x, y);
+        assertEquals(expected, actual);
+    }
+}
+```
+
+---
+
+# Requirements for the `add` function ?
+
+--
+
+How does `add` differ from `substract` ?
+
+--
+
+The result should not depend on parameter order
+
+```
+@Test
+void testAddCommutative() {
+    Random r = new Random();
+    for (int i = 0; i < 100; i++) {
+        int x = r.nextInt();
+        int y = r.nextInt();
+        assertEquals(add(x, y), add(y, x));
+    }
+}
+```
+
+--
+
+```
+int add(int a, int b) {
+    return a * b;
+}
+```
+
+---
+
+# What is the difference between add and multiply ?
+
+Neutral element is 0.
+
+```
+@Test
+void testAddNeutral0() {
+    Random r = new Random();
+    for (int i = 0; i < 100; i++) {
+        int x = r.nextInt();
+        assertEquals(x, add(x, 0));
+    }
+}
+```
+
+--
+
+```
+int add(int a, int b) { 
+  return a - b; 
+}
+```
+
+Fails because of previous test 'The result should not depend on parameter order'.
+
+---
+
+# Last property : associativity
+
+```
+@Test
+void testAddAssociativity() {
+    Random r = new Random();
+    for (int i = 0; i < 100; i++) {
+        int x = r.nextInt();
+        int y = r.nextInt();
+        int z = r.nextInt();
+        assertEquals(add(x, add(y, z)), add(add(x, y), z));
+    }
+}
+```
+
+---
+template: inverse
+# Real-world patterns
+---
+template: image
+
+![](images/there-and-back-again.jpg)
+
+# There and back again
+---
+template: image-white
+
+![](images/property-inverse.png)
+
+---
+layout:false
+# Symmetry
+
+```
+assertEquals(user, readJson(writeJson(user)));
+```
+
+---
+class: center, middle
+
+## @mhibberd
+## "Maybe you could test a relatively well known open source library and find a bug for something they have unit tests for"
+
+---
+
+## Joda
+
+```scala
+import org.joda.time._
+
+forAll { dt: DateTime =>
+  val formatter = DateTimeFormat.fullDateTime()
+  val dt2 = dt.withMillisOfSecond(0)
+  formatter.parseDateTime(formatter.print(dt2)) =? dt2
+}
+```
+
+---
+class: center, middle
+
+```
+Invalid format:
+"Sunday, September 22, 2148 9:08:08 PM ART"
+is malformed at "ART"
+```
+
+---
+
+## Bug or Feature?
+
+- http://stackoverflow.com/questions/15642053/joda-time-parsing-string-throws-java-lang-illegalargumentexception
+- http://comments.gmane.org/gmane.comp.java.joda-time.user/1385
+- https://github.com/JodaOrg/joda-time/commit/14863a51230b3d44201646dbc1ce5d7f6bb97a33
+
+---
+#Symmetry
+
+```
+String id = UserDao.insert(u1);
+User u2 = UserDao.get(id);
+assertEquals(u1, u2);
+```
+
+---
+#Symmetry + Invariants
+
+```
+String id = UserDao.insert(u1);
+UserDao.insert(u2);
+User u3 = UserDao.get(id);
+assertEquals(u1, u3);
+```
+
+--
+
+```
+User with name "bob" already exists !
+```
+
+---
+# Invariants
+
+```
+String id1 = UserDao.insert(u1);
+String id2 = UserDao.insert(u2.withName(u1.getName()));
+assertNotNull(id1);
+assertNull(id2);
+```
+
+---
+template: image-white
+
+![](images/property_commutative.png)
+
+---
+layout:false
+# Multiple paths
+
+```
+assertEquals(add(x, add(y, z)), add(add(x, y), z)));
+```
+
+--
+
+```
+assertEquals(list.drop(5).head(), list.elementAt(5));
+```
+
+---
+# Performance
+
+```
+assertEquals(quicksort(list), bubblesort(list));
+```
+
+---
+# Invariants
+
+```
+assertEquals(list, list.filter(x -> true));
+assertEquals(emptyList, list.filter(x -> false));
+```
+
+--
+
+```
+assertEquals(list, list.map(identity));
+```
+---
+# Idempotence
+
+```
+assertEquals(list.distinct(), list.distinct().distinct());
+assertEquals(list.sorted(), list.sorted().sorted());
+```
+
+---
+# Consistency
+
+```
+File f = File.createTempFile();
+write(f, string1);
+write(f, string2);
+assertEquals(string2, read(f));
+```
+
+---
+
+# Real-world patterns
+
+* Symmetry
+  - Serialize / Deserialize
+  - Add / Subtract
+  - Write / Read
+* Multiple paths
+  - commutativity
+  - other implementation
+* Invariants
+  - Idempotence
+  - Consistency
+
+---
+template: inverse
+
+#Toolkit : QuickCheck for JUnit
+
+---
+layout:false
+
+# QuickCheck for JUnit
+
+## Setup
+## Property
+## Generator
+## Shrinker
+
+[Official Site](https://pholser.github.io/junit-quickcheck)
+
+---
+
+# Setup
+
+```xml
+<dependency>
+	<groupId>com.pholser</groupId>
+	<artifactId>junit-quickcheck-core</artifactId>
+	<version>0.7</version>
+</dependency>
+<dependency>
+	<groupId>com.pholser</groupId>
+	<artifactId>junit-quickcheck-generators</artifactId>
+	<version>0.7</version>
+</dependency>
+```
+
+---
+# Sample Property
+
+```
+import com.pholser.junit.quickcheck.Property;
+import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
+
+@RunWith(JUnitQuickcheck.class)
+public class DemoProperties {
+
+    @Property
+    public void concatenationLength(String s1, String s2) {
+        assertEquals(s1.length() + s2.length(), 
+		             (s1 + s2).length());
+    }
+}
+```
+
+---
+#Generator
+
+Primitive types :
+* int
+* double
+* String
+* boolean
+
+---
+# Constraining generated values
+
+```
+@Property
+public void additionCommut(
+	@InRange(min = "-10", max = "10") int i, 
+	int j) {
+}
+
+@Property
+public void dateFormatParse(
+	@InRange(min = "1920", max = "3000", format = "YYYY") Date d) {
+}
+```
+
+---
+# Custom Generator
+
+```
+@Property
+public void dbInsertGet(@From(PersonGenerator.class) Person p)
+```
+--
+
+```
+import com.pholser.junit.quickcheck.generator.GenerationStatus;
+import com.pholser.junit.quickcheck.generator.Generator;
+import com.pholser.junit.quickcheck.random.SourceOfRandomness;
+
+public class PersonGenerator extends Generator<Person> {
+
+    public PersonGenerator() {
+        super(Person.class);
+    }
+
+    public Person generate(SourceOfRandomness random, GenerationStatus status) {
+        Person person = new Person();
+        person.name = gen().type(String.class).generate(random, status);
+        return person;
+    }
+}
+```
+
+---
+# Shrinking
+
+```
+@Property(shrink = true, maxShrinks = 100, maxShrinkDepth = 20)
+public void concatenationLength(String s1, String s2) {
+	assertThat(s1.length() + s2.length())
+			.withFailMessage("concatenation of %s and %s", s1, s2)
+			.isEqualTo((s1 + s2).length() * 2);
+}
+```
+
+--
+
+```
+java.lang.AssertionError: Property concatenationLength falsified via shrinking:
+  concatenation of  and 򨉷𷢐
+Shrunken args: [, 򨉷𷢐]
+Original failure message: [concatenation of 㘾 and 򨉷𷢐]
+Original args: [㘾, 򨉷𷢐]
+Seeds: [7663674302300308413, -2560617336833361624]
+```
+
+---
+#Shrinking in custom generators
+
+```
+@Override
+public List<Address> doShrink(
+		SourceOfRandomness random, 
+		Address larger) {
+		
+    return gen().type(Integer.class)
+            .doShrink(random, larger.zipcode)
+            .stream()
+            .map(zip -> new Address(larger.street, zip))
+            .collect(Collectors.toList());
+
+}
+```
+---
+template: inverse
+
+#Practical works !
+
+---
+template: inverse
+
+#Example-Based VS Property-Based
+
+---
+layout: false
+#Example-Based VS Property-Based
+
+* PBT more general, can replace several example-based
+* can reveal edge cases (null, negative, non english strings ...)
+* forces you to think about the requirements
+* example-based still helpful for newcomers
+* PBT requires to invest in Generators
+
+  </textarea>
+    <script src="downloads/remark-latest.min.js"></script>
+    <script>
+        remark.macros.scale = function (percentage) {
+          var url = this;
+          return '<img src="' + url + '" style="width: ' + percentage + '" />';
+        };
+
+        var slideshow = remark.create({
+          highlightStyle: 'idea',
+          highlightLanguage: 'java',
+          highlightLines: true
+        }) ;
+    </script>
+</body>
+</html>
