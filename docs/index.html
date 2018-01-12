@@ -336,6 +336,14 @@ assertEquals(u1, u2);
 ```
 
 ---
+#Symmetry ideas
+
+* toJson / parse
+* insert DB, get
+* Date : dayplus (Joda VS java date)
+* encryption / decryption
+
+---
 #Symmetry + Invariants
 
 ```
@@ -418,6 +426,10 @@ write(f, string2);
 assertEquals(string2, read(f));
 ```
 
+* db : createOrUpdate
+* schemaMigration
+* write to a file
+
 ---
 
 # Real-world patterns
@@ -432,7 +444,7 @@ assertEquals(string2, read(f));
 * Invariants
   - Idempotence
   - Consistency
-
+  
 ---
 template: inverse
 
@@ -506,7 +518,9 @@ public void additionCommut(
 
 @Property
 public void dateFormatParse(
-	@InRange(min = "1920", max = "3000", format = "YYYY") Date d) {
+	@InRange(min = "1920", 
+			 max = "3000", 
+			 format = "YYYY") Date d) {
 }
 ```
 
@@ -515,24 +529,24 @@ public void dateFormatParse(
 
 ```
 @Property
-public void dbInsertGet(@From(PersonGenerator.class) Person p)
+public void dbInsertGet(
+     @From(PersonGenerator.class) Person p)
 ```
 --
 
 ```
-import com.pholser.junit.quickcheck.generator.GenerationStatus;
-import com.pholser.junit.quickcheck.generator.Generator;
-import com.pholser.junit.quickcheck.random.SourceOfRandomness;
-
 public class PersonGenerator extends Generator<Person> {
 
     public PersonGenerator() {
         super(Person.class);
     }
 
-    public Person generate(SourceOfRandomness random, GenerationStatus status) {
+    public Person generate(SourceOfRandomness random, 
+	                       GenerationStatus status) {
         Person person = new Person();
-        person.name = gen().type(String.class).generate(random, status);
+        person.name = gen()
+		  .type(String.class)
+		  .generate(random, status);
         return person;
     }
 }
@@ -542,10 +556,12 @@ public class PersonGenerator extends Generator<Person> {
 # Shrinking
 
 ```
-@Property(shrink = true, maxShrinks = 100, maxShrinkDepth = 20)
+@Property(shrink = true, 
+          maxShrinks = 100, 
+		  maxShrinkDepth = 20)
 public void concatenationLength(String s1, String s2) {
 	assertThat(s1.length() + s2.length())
-			.withFailMessage("concatenation of %s and %s", s1, s2)
+			.withFailMessage("%s + %s", s1, s2)
 			.isEqualTo((s1 + s2).length() * 2);
 }
 ```
@@ -553,8 +569,8 @@ public void concatenationLength(String s1, String s2) {
 --
 
 ```
-java.lang.AssertionError: Property concatenationLength falsified via shrinking:
-  concatenation of  and 򨉷𷢐
+java.lang.AssertionError: Property concatenationLength
+  falsified via shrinking:  concatenation of  and 򨉷𷢐
 Shrunken args: [, 򨉷𷢐]
 Original failure message: [concatenation of 㘾 and 򨉷𷢐]
 Original args: [㘾, 򨉷𷢐]
@@ -597,6 +613,17 @@ layout: false
 * forces you to think about the requirements
 * example-based still helpful for newcomers
 * PBT requires to invest in Generators
+
+---
+# Resources
+
+* [JUnitQuickcheck](http://pholser.github.io/junit-quickcheck/)
+* Presentations : 
+ - <https://www.slideshare.net/ScottWlaschin/an-introduction-to-property-based-testing>
+ - <http://blog.charleso.org/property-testing-preso/yowlj2015.html>
+* [Podam](https://devopsfolks.github.io/podam/) : a framework to generate random instance of Pojos
+* [Vavr](http://www.vavr.io/vavr-docs/#_property_checking) but does not shrink
+* [ScalaCheck](https://www.scalacheck.org/)
 
   </textarea>
     <script src="downloads/remark-latest.min.js"></script>
