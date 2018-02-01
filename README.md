@@ -2,4 +2,6 @@
 
 Simple kata to demonstrate the use of PBT in Java with QuickCheck.
 
-Slides : https://tyrcho.github.io/pbt-kata/
+Slides :
+* Property Based https://tyrcho.github.io/pbt-kata/
+* Mutations with PIT : https://tyrcho.github.io/pbt-kata/mutation.html
