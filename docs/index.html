@@ -59,18 +59,25 @@ layout:false
 
 # Variants of unit testing - how to improve code coverage
 
-## What is a good code coverage - discussion
-## Fighting mutants with PIT
-## Introducing property based testing - for the brave ones 
-## Introducing approval testing - for the lazy ones 
+## 1. What is a good code coverage - discussion
+## 2. Fighting mutants with PIT
+## 3. Introducing property based testing - for the brave ones 
+## 4. Introducing approval testing - for the lazy ones 
 
 ---
 template: inverse
 
-#What is a good code coverage ?
+#1. Code coverage
 
 ---
 layout:false
+class: center, middle
+
+#What is a good code coverage ?
+
+![:scale 80%](images/question.png)
+
+---
 
 # Code coverage
 
@@ -82,7 +89,7 @@ layout:false
 ---
 template: inverse
 
-#Fighting mutants with PIT
+#2. Fighting mutants with PIT
 
 ---
 layout:false
@@ -160,7 +167,7 @@ And run
 ---
 template: inverse
 
-#Property Based Testing
+#3. Property Based Testing
 
 ---
 layout:false
@@ -549,14 +556,8 @@ assertEquals(string2, read(f));
   - Consistency
   
 ---
-template: inverse
 
-#Toolkit : QuickCheck for JUnit
-
----
-layout:false
-
-# QuickCheck for JUnit
+# Toolkit: QuickCheck for JUnit
 
 ## Setup
 ## Property
@@ -703,12 +704,6 @@ template: inverse
 #Practical works !
 
 ---
-template: inverse
-
-#Example-Based VS Property-Based
-
----
-layout: false
 #Example-Based VS Property-Based
 
 * PBT more general, can replace several example-based
@@ -727,6 +722,18 @@ layout: false
 * [Podam](https://devopsfolks.github.io/podam/) : a framework to generate random instance of Pojos
 * [Vavr](http://www.vavr.io/vavr-docs/#_property_checking) but does not shrink
 * [ScalaCheck](https://www.scalacheck.org/)
+
+
+---
+template: inverse
+
+#4. Approval testing
+
+---
+layout:false
+
+https://github.com/approvals/ApprovalTests.Java
+http://approvaltests.com/
 
   </textarea>
     <script src="downloads/remark-latest.min.js"></script>
