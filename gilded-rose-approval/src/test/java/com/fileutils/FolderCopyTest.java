@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 class FolderCopyTest {
     @Test
-    public void approvalCopySrcFolder() throws Exception {
+    void approvalCopySrcFolder() throws Exception {
         Path outDir = Files.createTempDirectory("src");
         FolderCopy.copyFrom(Paths.get("."), outDir);
         Approvals.verifyEachFileInDirectory(outDir.toFile(), f -> f.getName().endsWith(".xml"));

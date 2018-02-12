@@ -59,10 +59,10 @@ layout:false
 
 # Variants of unit testing - how to improve code coverage
 
-## 1. What is a good code coverage - discussion
+## 1. What is a good code coverage ?
 ## 2. Fighting mutants with PIT
-## 3. Introducing property based testing - for the brave ones 
-## 4. Introducing approval testing - for the lazy ones 
+## 3. Property based testing - for the brave ones 
+## 4. Approval testing - for the lazy ones 
 
 ---
 template: inverse
@@ -114,12 +114,12 @@ static boolean isPositive(int i) {
 
 @Test
 void threeShouldBePositive() {
-    assertTrue(SimpleMaths.isPositive(3));
+    assertTrue(isPositive(3));
 }
 
 @Test
 void minusTwoShouldBePositive() {
-    assertFalse(SimpleMaths.isPositive(-2));
+    assertFalse(isPositive(-2));
 }
 ```
 
@@ -156,6 +156,15 @@ Just add to your `pom.xml`:
 And run
 
 `mvn clean test org.pitest:pitest-maven:mutationCoverage`
+
+---
+class: center, middle
+
+#Questions ?
+
+![:scale 80%](images/question.png)
+
+Demo in `pbt-kata/java`
 
 ---
 # Resources
@@ -699,9 +708,18 @@ public List<Address> doShrink(
 }
 ```
 ---
+class: center, middle
+
+#Questions ?
+
+![:scale 80%](images/question.png)
+
+---
 template: inverse
 
 #Practical works !
+
+<https://github.com/tyrcho/pbt-kata/tree/master/java>
 
 ---
 #Example-Based VS Property-Based
@@ -731,9 +749,74 @@ template: inverse
 
 ---
 layout:false
+# Principle
 
-https://github.com/approvals/ApprovalTests.Java
-http://approvaltests.com/
+```java
+@Test
+void updateQuality_normal_shouldDecrease() throws Exception {
+    Item sword = new Item("basic sword", 10, 8);
+    Item swordNextDay = GildedRose.nextDay(sword);
+    assertEquals(9, swordNextDay.sellIn);
+    assertEquals(7, swordNextDay.quality);
+}
+```
+
+--
+
+```java
+@Test
+void approvalSwordShouldDeteriorate() throws Exception {
+    Item sword = new Item("basic sword", 10, 8);
+    Approvals.verify(GildedRose.nextDay(sword));
+}
+```
+
+---
+# With argument combinations
+
+```java
+@Test
+void approvalBrieShouldImprove() throws Exception {
+    Integer[] sellInDays = {-5, 0, 1, 20};
+    Integer[] qualities = {0, 10};
+
+    verifyAllCombinations((sellIn, quality) ->
+            GildedRose.nextDay(
+                    new Item(BRIE, sellIn, quality)),
+                    sellInDays, 
+                    qualities);
+    }
+```
+
+---
+# Expected folder content
+
+```java
+@Test
+void approvalCopySrcFolder() throws Exception {
+    Path outDir = Files.createTempDirectory("src");
+    FolderCopy.copyFrom(Paths.get("."), outDir);
+    Approvals.verifyEachFileInDirectory(
+            outDir.toFile(),
+            f -> f.getName().endsWith(".xml"));
+}
+```
+
+---
+class: center, middle
+
+#Questions ?
+
+![:scale 80%](images/question.png)
+
+---
+
+#Resources
+
+- http://approvaltests.com/
+- [Github project](https://github.com/approvals/ApprovalTests.Java)
+- [sample project](https://github.com/tyrcho/pbt-kata/tree/master/gilded-rose-approval)
+
 
   </textarea>
     <script src="downloads/remark-latest.min.js"></script>
