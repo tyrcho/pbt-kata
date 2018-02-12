@@ -1,7 +1,8 @@
-# Property-Based Testing - Kata
+## Variants of unit testing - how to improve code coverage
 
-Simple kata to demonstrate the use of PBT in Java with QuickCheck.
+1. What is a good code coverage - discussion
+2. Fighting mutants with PIT
+3. Introducing property based testing - for the brave ones 
+4. Introducing approval testing - for the lazy ones 
 
-Slides :
-* Property Based https://tyrcho.github.io/pbt-kata/
-* Mutations with PIT : https://tyrcho.github.io/pbt-kata/mutation.html
+Slides : https://tyrcho.github.io/pbt-kata/

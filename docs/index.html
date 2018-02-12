@@ -55,6 +55,109 @@ layout: true
 class: center, middle, inverse
 
 ---
+layout:false
+
+# Variants of unit testing - how to improve code coverage
+
+## What is a good code coverage - discussion
+## Fighting mutants with PIT
+## Introducing property based testing - for the brave ones 
+## Introducing approval testing - for the lazy ones 
+
+---
+template: inverse
+
+#What is a good code coverage ?
+
+---
+layout:false
+
+# Code coverage
+
+## Goal : find more bugs !
+## 100% coverage does not equal 0% bugs
+## Assertions are important
+## Not only lines covered
+
+---
+template: inverse
+
+#Fighting mutants with PIT
+
+---
+layout:false
+
+# Why mutation testing ?
+
+## Code coverage
+## Efficient tests
+
+---
+# Example
+
+```
+static boolean isPositive(int i) {
+    if (i > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+@Test
+void threeShouldBePositive() {
+    assertTrue(SimpleMaths.isPositive(3));
+}
+
+@Test
+void minusTwoShouldBePositive() {
+    assertFalse(SimpleMaths.isPositive(-2));
+}
+```
+
+---
+![](images/math-mutation.png)
+
+---
+# PIT principle : kill the mutants !
+
+## Mutations seeded in your code
+
+--
+
+## Run tests
+
+--
+
+## Mutants should be killed by your tests
+
+![:scale 40%](images/killed-mutant.png)
+
+---
+# Setup
+
+Just add to your `pom.xml`:
+```xml
+<plugin>
+    <groupId>org.pitest</groupId>
+    <artifactId>pitest-maven</artifactId>
+    <version>1.3.0</version>
+</plugin>
+```
+
+And run
+
+`mvn clean test org.pitest:pitest-maven:mutationCoverage`
+
+---
+# Resources
+
+* [pitest](http://pitest.org/)
+* [mutation testing pres](https://www.slideshare.net/NLJUG/kill-the-mutants-and-test-your-tests-roy-van-rijn)
+* [Sample project with Junit5](https://github.com/tyrcho/pbt-kata/tree/master/mutations)
+
+---
 template: inverse
 
 #Property Based Testing
